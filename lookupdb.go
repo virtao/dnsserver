@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net"
+	"os"
 )
 
 type NameModel struct {
@@ -19,7 +19,7 @@ type Name struct {
 
 func GetNames() ([]Name, error) {
 	// read file
-	data, err := ioutil.ReadFile("./names.json")
+	data, err := os.ReadFile(InputFile)
 	if err != nil {
 		fmt.Print(err)
 		return nil, err

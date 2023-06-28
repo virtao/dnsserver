@@ -33,9 +33,11 @@ package main
 import (
 	"bytes"
 	"encoding/binary"
+	"flag"
 	"fmt"
 	"net"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -262,8 +264,26 @@ func handleDNSClient(requestBytes []byte, serverConn *net.UDPConn, clientAddr *n
 	serverConn.WriteToUDP(responseBuffer.Bytes(), clientAddr)
 }
 
+var Ip string
+var Port int
+var InputFile string
+
 func main() {
-	serverAddr, err := net.ResolveUDPAddr("udp", ":1053")
+	var help bool
+
+	flag.StringVar(&Ip, "a", "127.0.0.1", "Listen ip.")
+	flag.IntVar(&Port, "p", 1053, "Listen port.")
+	flag.StringVar(&InputFile, "i", "./names.json", "Input domain file path.")
+	flag.BoolVar(&help, "h", false, "Show usage.")
+
+	flag.Parse()
+
+	if help {
+		flag.Usage()
+		return
+	}
+
+	serverAddr, err := net.ResolveUDPAddr("udp", Ip+":"+strconv.Itoa(Port))
 
 	if err != nil {
 		fmt.Println("Error resolving UDP address: ", err.Error())
